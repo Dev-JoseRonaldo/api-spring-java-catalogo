@@ -1,7 +1,9 @@
 package com.joseronaldo.catalogo.resources;
 
 import com.joseronaldo.catalogo.dto.CategoryDTO;
+import com.joseronaldo.catalogo.repositories.CategoryRepository;
 import com.joseronaldo.catalogo.services.CategoryService;
+import com.joseronaldo.catalogo.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class CategoryResource {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> findAll() {
@@ -42,5 +47,15 @@ public class CategoryResource {
     public ResponseEntity<CategoryDTO> update(@PathVariable Long categoryId, @RequestBody CategoryDTO dto){
         dto = categoryService.update(categoryId, dto);
         return ResponseEntity.ok().body(dto);
+    }
+
+    @DeleteMapping(value = "/{categoryId}")
+    public ResponseEntity<CategoryDTO> delete(@PathVariable Long categoryId){
+        if (!categoryRepository.existsById(categoryId)) {
+            throw new ResourceNotFoundException("Id " + categoryId + " not found");
+        }
+
+        categoryService.delete(categoryId);
+        return ResponseEntity.noContent().build();
     }
 }

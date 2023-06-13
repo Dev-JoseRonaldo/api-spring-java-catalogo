@@ -3,9 +3,13 @@ package com.joseronaldo.catalogo.services;
 import com.joseronaldo.catalogo.dto.CategoryDTO;
 import com.joseronaldo.catalogo.entities.Category;
 import com.joseronaldo.catalogo.repositories.CategoryRepository;
+import com.joseronaldo.catalogo.services.exceptions.DatabaseException;
 import com.joseronaldo.catalogo.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,5 +56,17 @@ public class CategoryService {
             throw new ResourceNotFoundException("Id " + categoryId + " not found");
         }
 
+    }
+
+    public void delete(Long categoryId) {
+//        try {
+        categoryRepository.deleteById(categoryId);
+//        }
+//        catch (EmptyResultDataAccessException e) {
+//            throw new ResourceNotFoundException("Id  + categoryId +  not found");
+//        }
+//        catch (DataIntegrityViolationException e) {
+//            throw new DatabaseException("Integrity violation");
+//        }
     }
 }
