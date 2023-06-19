@@ -1,8 +1,8 @@
 package com.joseronaldo.catalogo.resources;
 
-import com.joseronaldo.catalogo.dto.CategoryDTO;
-import com.joseronaldo.catalogo.repositories.CategoryRepository;
-import com.joseronaldo.catalogo.services.CategoryService;
+import com.joseronaldo.catalogo.dto.ProductDTO;
+import com.joseronaldo.catalogo.repositories.ProductRepository;
+import com.joseronaldo.catalogo.services.ProductService;
 import com.joseronaldo.catalogo.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,17 +15,17 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 
 @RestController
-@RequestMapping(value = "/categories")
-public class CategoryResource {
+@RequestMapping(value = "/products")
+public class ProductResource {
 
     @Autowired
-    private CategoryService categoryService;
+    private ProductService productService;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private ProductRepository productRepository;
 
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(
+    public ResponseEntity<Page<ProductDTO>> findAll(
         @RequestParam(value = "page", defaultValue = "0") Integer page,
         @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
         @RequestParam(value = "direction", defaultValue = "ASC") String direction,
@@ -34,38 +34,38 @@ public class CategoryResource {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
 
 
-        Page<CategoryDTO> list = categoryService.findAllPaged(pageRequest);
+        Page<ProductDTO> list = productService.findAllPaged(pageRequest);
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping(value = "/{categoryId}")
-    public ResponseEntity<CategoryDTO> findById(@PathVariable Long categoryId) {
-        CategoryDTO result = categoryService.findById(categoryId);
+    @GetMapping(value = "/{productId}")
+    public ResponseEntity<ProductDTO> findById(@PathVariable Long productId) {
+        ProductDTO result = productService.findById(productId);
         return ResponseEntity.ok().body(result);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> insert(@RequestBody CategoryDTO dto){
-        dto = categoryService.insert(dto);
+    public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto){
+        dto = productService.insert(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(dto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(dto);
     }
 
-    @PutMapping(value = "/{categoryId}")
-    public ResponseEntity<CategoryDTO> update(@PathVariable Long categoryId, @RequestBody CategoryDTO dto){
-        dto = categoryService.update(categoryId, dto);
+    @PutMapping(value = "/{productId}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long productId, @RequestBody ProductDTO dto){
+        dto = productService.update(productId, dto);
         return ResponseEntity.ok().body(dto);
     }
 
-    @DeleteMapping(value = "/{categoryId}")
-    public ResponseEntity<CategoryDTO> delete(@PathVariable Long categoryId){
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new ResourceNotFoundException("Id " + categoryId + " not found");
+    @DeleteMapping(value = "/{productId}")
+    public ResponseEntity<ProductDTO> delete(@PathVariable Long productId){
+        if (!productRepository.existsById(productId)) {
+            throw new ResourceNotFoundException("Id " + productId + " not found");
         }
 
-        categoryService.delete(categoryId);
+        productService.delete(productId);
         return ResponseEntity.noContent().build();
     }
 }
