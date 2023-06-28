@@ -1,9 +1,11 @@
 package com.joseronaldo.catalogo.repositories;
 
 import com.joseronaldo.catalogo.entities.Product;
+import com.joseronaldo.catalogo.services.exceptions.ResourceNotFoundException;
 import com.joseronaldo.catalogo.tests.Factory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -65,11 +67,12 @@ public class ProductRepositoryTests {
         Assertions.assertFalse(result.isPresent());
     }
 
-//    @Test
-//    public void deleteShouldThrowEmpityResultResourceNotFoundExceptionWhenIdDoesNotExist() {
-//
-//        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-//            repository.deleteById(nonExistingId);
-//        });
-//    }
+    @Disabled("Test disabled because delete by id no longer throws any exceptions")
+    @Test
+    public void deleteShouldThrowEmptyResultResourceNotFoundExceptionWhenIdDoesNotExist() {
+
+        Assertions.assertThrows(ResourceNotFoundException.class, () -> {
+            repository.deleteById(nonExistingId);
+        });
+    }
 }
